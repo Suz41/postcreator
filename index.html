@@ -543,8 +543,10 @@
   alignCenter.addEventListener("click", () => setAlignment("center", alignCenter));
   alignRight.addEventListener("click", () => setAlignment("right", alignRight));
 
-  // AI sentence fix (LanguageTool free API)
+  // AI sentence improvement (HuggingFace free inference API)
   const fixBtn = document.getElementById("fixBtn");
+  const HF_API = "https://api-inference.huggingface.co/models/vennify/t5-base-grammar-correction";
+
   fixBtn.addEventListener("click", async () => {
     const text = editable.textContent.trim();
     if (!text) return;
@@ -553,33 +555,19 @@
     fixBtn.disabled = true;
 
     try {
-      const res = await fetch("https://api.languagetool.org/v2/check", {
+      const res = await fetch(HF_API, {
         method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          text: text,
-          language: "en-US"
-        })
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ inputs: "grammar: " + text })
       });
       const data = await res.json();
 
-      if (data.matches.length === 0) {
-        fixBtn.textContent = "OK!";
-        setTimeout(() => { fixBtn.textContent = "Fix"; }, 1200);
-        return;
+      if (Array.isArray(data) && data[0]?.generated_text) {
+        editable.textContent = data[0].generated_text;
+        fixBtn.textContent = "Done";
+      } else {
+        fixBtn.textContent = "Err";
       }
-
-      // Apply replacements from end to start so offsets stay valid
-      let corrected = text;
-      const matches = data.matches.filter(m => m.replacements.length > 0).reverse();
-      for (const match of matches) {
-        const before = corrected.slice(0, match.offset);
-        const after = corrected.slice(match.offset + match.length);
-        corrected = before + match.replacements[0].value + after;
-      }
-
-      editable.textContent = corrected;
-      fixBtn.textContent = "Done";
       setTimeout(() => { fixBtn.textContent = "Fix"; }, 1200);
     } catch (e) {
       fixBtn.textContent = "Err";
