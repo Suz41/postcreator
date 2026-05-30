@@ -301,6 +301,7 @@
       <button class="btn-mini" id="alignRight">&#8677;</button>
     </div>
 
+    <button class="btn" id="fixBtn">Fix</button>
     <button class="btn" id="previewBtn">Preview</button>
     <button class="btn" id="clearBtn">Clear</button>
   </div>
@@ -541,6 +542,52 @@
   alignLeft.addEventListener("click", () => setAlignment("left", alignLeft));
   alignCenter.addEventListener("click", () => setAlignment("center", alignCenter));
   alignRight.addEventListener("click", () => setAlignment("right", alignRight));
+
+  // AI sentence fix (LanguageTool free API)
+  const fixBtn = document.getElementById("fixBtn");
+  fixBtn.addEventListener("click", async () => {
+    const text = editable.textContent.trim();
+    if (!text) return;
+
+    fixBtn.textContent = "...";
+    fixBtn.disabled = true;
+
+    try {
+      const res = await fetch("https://api.languagetool.org/v2/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          text: text,
+          language: "en-US"
+        })
+      });
+      const data = await res.json();
+
+      if (data.matches.length === 0) {
+        fixBtn.textContent = "OK!";
+        setTimeout(() => { fixBtn.textContent = "Fix"; }, 1200);
+        return;
+      }
+
+      // Apply replacements from end to start so offsets stay valid
+      let corrected = text;
+      const matches = data.matches.filter(m => m.replacements.length > 0).reverse();
+      for (const match of matches) {
+        const before = corrected.slice(0, match.offset);
+        const after = corrected.slice(match.offset + match.length);
+        corrected = before + match.replacements[0].value + after;
+      }
+
+      editable.textContent = corrected;
+      fixBtn.textContent = "Done";
+      setTimeout(() => { fixBtn.textContent = "Fix"; }, 1200);
+    } catch (e) {
+      fixBtn.textContent = "Err";
+      setTimeout(() => { fixBtn.textContent = "Fix"; }, 1200);
+    }
+
+    fixBtn.disabled = false;
+  });
 
   // Clear
   const clearBtn = document.getElementById("clearBtn");
