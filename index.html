@@ -142,7 +142,7 @@
       line-height: 1.4;
       outline: none;
       border: none;
-      text-align: left;
+      text-align: center;
       word-wrap: break-word;
       white-space: normal;
       font-weight: 400;
@@ -295,7 +295,14 @@
       <button class="btn-mini" id="italicBtn"><i>I</i></button>
     </div>
 
+    <div class="control">
+      <button class="btn-mini" id="alignLeft">&#8676;</button>
+      <button class="btn-mini active" id="alignCenter">&#8596;</button>
+      <button class="btn-mini" id="alignRight">&#8677;</button>
+    </div>
+
     <button class="btn" id="previewBtn">Preview</button>
+    <button class="btn" id="clearBtn">Clear</button>
   </div>
 
   <!-- Text card -->
@@ -517,6 +524,29 @@
     const isItalic = editable.style.fontStyle === "italic";
     editable.style.fontStyle = isItalic ? "normal" : "italic";
     italicBtn.classList.toggle("active", !isItalic);
+  });
+
+  // Text alignment
+  const alignLeft = document.getElementById("alignLeft");
+  const alignCenter = document.getElementById("alignCenter");
+  const alignRight = document.getElementById("alignRight");
+  const alignBtns = [alignLeft, alignCenter, alignRight];
+
+  function setAlignment(align, activeBtn) {
+    editable.style.textAlign = align;
+    alignBtns.forEach(b => b.classList.remove("active"));
+    activeBtn.classList.add("active");
+  }
+
+  alignLeft.addEventListener("click", () => setAlignment("left", alignLeft));
+  alignCenter.addEventListener("click", () => setAlignment("center", alignCenter));
+  alignRight.addEventListener("click", () => setAlignment("right", alignRight));
+
+  // Clear
+  const clearBtn = document.getElementById("clearBtn");
+  clearBtn.addEventListener("click", () => {
+    editable.textContent = "";
+    editable.focus();
   });
 
   // Preview (force solid background to avoid white border)
