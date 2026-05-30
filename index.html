@@ -543,9 +543,9 @@
   alignCenter.addEventListener("click", () => setAlignment("center", alignCenter));
   alignRight.addEventListener("click", () => setAlignment("right", alignRight));
 
-  // AI sentence improvement (HuggingFace free inference API)
+  // AI sentence fix (LanguageTool — free, works from browser)
   const fixBtn = document.getElementById("fixBtn");
-  const HF_API = "https://api-inference.huggingface.co/models/vennify/t5-base-grammar-correction";
+  const LT_API = "https://api.languagetool.org/v2/check";
 
   fixBtn.addEventListener("click", async () => {
     const text = editable.textContent.trim();
@@ -555,23 +555,43 @@
     fixBtn.disabled = true;
 
     try {
-      const res = await fetch(HF_API, {
+      const res = await fetch(LT_API, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ inputs: "grammar: " + text })
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          text: text,
+          language: "en-US",
+          enabledOnly: "false",
+          level: "picky"
+        })
       });
       const data = await res.json();
 
-      if (Array.isArray(data) && data[0]?.generated_text) {
-        editable.textContent = data[0].generated_text;
-        fixBtn.textContent = "Done";
-      } else {
-        fixBtn.textContent = "Err";
+      if (!data.matches || data.matches.length === 0) {
+        fixBtn.textContent = "OK!";
+        setTimeout(() => { fixBtn.textContent = "Fix"; }, 1200);
+        fixBtn.disabled = false;
+        return;
       }
-      setTimeout(() => { fixBtn.textContent = "Fix"; }, 1200);
+
+      // Apply corrections end-to-start so offsets stay valid
+      let corrected = text;
+      const fixes = data.matches
+        .filter(m => m.replacements && m.replacements.length > 0)
+        .sort((a, b) => b.offset - a.offset);
+
+      for (const match of fixes) {
+        const before = corrected.slice(0, match.offset);
+        const after = corrected.slice(match.offset + match.length);
+        corrected = before + match.replacements[0].value + after;
+      }
+
+      editable.textContent = corrected;
+      fixBtn.textContent = fixes.length + " fix" + (fixes.length > 1 ? "es" : "");
+      setTimeout(() => { fixBtn.textContent = "Fix"; }, 1500);
     } catch (e) {
       fixBtn.textContent = "Err";
-      setTimeout(() => { fixBtn.textContent = "Fix"; }, 1200);
+      setTimeout(() => { fixBtn.textContent = "Fix"; }, 1500);
     }
 
     fixBtn.disabled = false;
