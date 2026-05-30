@@ -549,16 +549,17 @@
     editable.focus();
   });
 
-  // Preview (force solid background to avoid white border)
+  // Preview (1080p JPEG)
   previewBtn.addEventListener("click", () => {
     const cardBg = getComputedStyle(card).backgroundColor || "#000000";
+    const scale = 1080 / card.offsetWidth;
 
     html2canvas(card, {
-      scale: 4,
-      backgroundColor: cardBg   // no transparent edges
+      scale: scale,
+      backgroundColor: cardBg
     })
       .then((canvas) => {
-        popupImage.src = canvas.toDataURL("image/png");
+        popupImage.src = canvas.toDataURL("image/jpeg", 0.95);
         popup.classList.add("show");
       })
       .catch(console.error);
@@ -567,7 +568,7 @@
   // Download
   downloadBtn.addEventListener("click", () => {
     const link = document.createElement("a");
-    link.download = "text-card.png";
+    link.download = "text-card.jpg";
     link.href = popupImage.src;
     link.click();
   });
