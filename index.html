@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Landscape Text Card (Mobile Only)</title>
+
+  <!-- Mobile viewport -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+  <!-- Inter font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <!-- html2canvas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #111111;   /* pure black */
+      font-family: "Inter", sans-serif;
+      color: #e5e7eb;
+    }
+
+    /* DESKTOP BLOCKER (for non-mobile) */
+    .desktop-blocker {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      color: #e5e7eb;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px;
+      z-index: 9999;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .desktop-blocker strong {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 16px;
+    }
+
+    /* Controls row – flat & mobile-friendly */
+    .controls {
+      width: 100%;
+      max-width: 480px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 10px;
+      font-size: 12px;
+    }
+
+    .control { display: flex; gap: 6px; align-items: center; }
+    .control span { opacity: 0.8; }
+
+    .hex-input {
+      width: 74px;
+      padding: 3px 4px;
+      font-size: 11px;
+      border: 1px solid #3f3f3f;
+      background: #000000;
+      color: #e5e7eb;
+      outline: none;
+    }
+
+    .hex-input:focus { border-color: #9ca3af; }
+
+    .color-chip {
+      width: 18px;
+      height: 18px;
+      border: 1px solid #3f3f3f;
+      cursor: pointer;
+    }
+
+    .size-select {
+      padding: 4px 6px;
+      font-size: 11px;
+      border: 1px solid #3f3f3f;
+      background: #000000;
+      color: #e5e7eb;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .btn {
+      padding: 6px 14px;
+      font-size: 11px;
+      border: 1px solid #3f3f3f;
+      background: #000000;
+      color: #e5e7eb;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .btn:active { transform: scale(0.97); }
+
+    .btn-mini {
+      padding: 3px 8px;
+      font-size: 11px;
+      border: 1px solid #3f3f3f;
+      background: #000000;
+      color: #e5e7eb;
+      cursor: pointer;
+    }
+
+    .btn-mini.active {
+      background: #e5e7eb;
+      color: #000000;
+      border-color: #e5e7eb;
+    }
+
+    /* Text card – mobile width, dynamic ratio */
+    .card {
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 1.91 / 1; /* Default ratio */
+      background: #000000;    /* pure black */
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 16px;
+      transition: aspect-ratio 0.3s ease; /* Smooth transition when changing size */
+    }
+
+    .editable {
+      width: 100%;
+      background: transparent;
+      color: #ffffff;
+      font-size: 16px;          /* default font size */
+      line-height: 1.4;
+      outline: none;
+      border: none;
+      text-align: left;
+      word-wrap: break-word;
+      white-space: normal;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    .editable:empty::before {
+      content: "Type your text here...";
+      color: #6b7280;
+    }
+
+    /* Preview popup */
+    .popup {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 10px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+      z-index: 20;
+    }
+
+    .popup.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .popup-image {
+      max-width: 92vw;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+
+    .popup-buttons {
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .btn-primary {
+      background: #e5e7eb;
+      color: #000000;
+      border-color: #e5e7eb;
+    }
+
+    .btn-cancel {
+      background: #000000;
+      border-color: #3f3f3f;
+      color: #e5e7eb;
+    }
+
+    /* Small custom color panel (bottom-right) */
+    .color-panel {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      background: #111111;
+      border: 1px solid #3f3f3f;
+      padding: 8px;
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      z-index: 30;
+    }
+
+    .color-panel.show { display: flex; }
+
+    .color-panel canvas {
+      display: block;
+      border: 1px solid #3f3f3f;
+    }
+
+    .color-panel input[type="range"] {
+      width: 160px;
+    }
+
+    .color-panel-header {
+      font-size: 11px;
+      opacity: 0.8;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- DESKTOP BLOCKER OVERLAY -->
+  <div id="desktopBlocker" class="desktop-blocker">
+    <div>
+      <strong>Mobile Only Tool</strong>
+      This text card editor is designed to work only on mobile devices.<br />
+      Please open this page on your phone to use it.
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="control">
+      <span>Ratio</span>
+      <select id="ratioSelect" class="size-select">
+        <option value="1.91 / 1" selected>1.91:1 (Social Link)</option>
+        <option value="16 / 9">16:9 (Widescreen)</option>
+        <option value="3 / 2">3:2 (Classic Photo)</option>
+        <option value="4 / 3">4:3 (Standard)</option>
+        <option value="2 / 1">2:1 (Cinematic)</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <span>BG</span>
+      <input type="text" id="bgHex" class="hex-input" value="#000000" maxlength="7" />
+      <div id="bgChip" class="color-chip"></div>
+    </div>
+
+    <div class="control">
+      <span>Font</span>
+      <input type="text" id="fontHex" class="hex-input" value="#ffffff" maxlength="7" />
+      <div id="fontChip" class="color-chip"></div>
+    </div>
+
+    <div class="control">
+      <span>Size</span>
+      <select id="fontSize" class="size-select">
+        <option value="14">14px</option>
+        <option value="16" selected>16px</option>
+        <option value="18">18px</option>
+        <option value="20">20px</option>
+        <option value="22">22px</option>
+        <option value="24">24px</option>
+        <option value="28">28px</option>
+        <option value="32">32px</option>
+      </select>
+    </div>
+
+    <div class="control">
+      <button class="btn-mini" id="boldBtn">B</button>
+      <button class="btn-mini" id="italicBtn"><i>I</i></button>
+    </div>
+
+    <button class="btn" id="previewBtn">Preview</button>
+  </div>
+
+  <!-- Text card -->
+  <div class="card" id="card">
+    <div class="editable" id="editable" contenteditable="true"></div>
+  </div>
+
+  <!-- Preview popup -->
+  <div class="popup" id="popup">
+    <img id="popupImage" class="popup-image" />
+    <div class="popup-buttons">
+      <button class="btn btn-primary" id="downloadBtn">Download</button>
+      <button class="btn btn-cancel" id="cancelBtn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Small custom color picker panel -->
+  <div class="color-panel" id="colorPanel">
+    <div class="color-panel-header" id="colorPanelLabel">Color</div>
+    <canvas id="colorArea" width="160" height="100"></canvas>
+    <input type="range" id="hueSlider" min="0" max="360" value="210" />
+    <button class="btn-mini" id="colorPanelDone">Done</button>
+  </div>
+
+<script>
+  // --- MOBILE-ONLY CHECK ---
+  function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+  }
+
+  const desktopBlocker = document.getElementById("desktopBlocker");
+  if (!isMobileDevice()) {
+    desktopBlocker.style.display = "flex";
+  }
+
+  // Core elements
+  const card           = document.getElementById("card");
+  const editable       = document.getElementById("editable");
+
+  const ratioSelect    = document.getElementById("ratioSelect");
+  const bgHexInput     = document.getElementById("bgHex");
+  const fontHexInput   = document.getElementById("fontHex");
+  const bgChip         = document.getElementById("bgChip");
+  const fontChip       = document.getElementById("fontChip");
+
+  const fontSizeSelect = document.getElementById("fontSize");
+  const boldBtn        = document.getElementById("boldBtn");
+  const italicBtn      = document.getElementById("italicBtn");
+
+  const previewBtn     = document.getElementById("previewBtn");
+  const popup          = document.getElementById("popup");
+  const popupImage     = document.getElementById("popupImage");
+  const downloadBtn    = document.getElementById("downloadBtn");
+  const cancelBtn      = document.getElementById("cancelBtn");
+
+  const colorPanel     = document.getElementById("colorPanel");
+  const colorPanelLabel= document.getElementById("colorPanelLabel");
+  const colorArea      = document.getElementById("colorArea");
+  const hueSlider      = document.getElementById("hueSlider");
+  const colorPanelDone = document.getElementById("colorPanelDone");
+  const ctx            = colorArea.getContext("2d");
+
+  let activeTarget = null; // "bg" or "font"
+  let isPicking = false;
+
+  function isValidHex(hex) {
+    return /^#[0-9a-fA-F]{6}$/.test(hex);
+  }
+
+  function rgbToHex(r, g, b) {
+    const toHex = (v) => v.toString(16).padStart(2, "0");
+    return "#" + toHex(r) + toHex(g) + toHex(b);
+  }
+
+  function hsvToRgb(h, s, v) {
+    let c = v * s;
+    let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    let m = v - c;
+    let r, g, b;
+
+    if (h < 60)      { r = c; g = x; b = 0; }
+    else if (h < 120){ r = x; g = c; b = 0; }
+    else if (h < 180){ r = 0; g = c; b = x; }
+    else if (h < 240){ r = 0; g = x; b = c; }
+    else if (h < 300){ r = x; g = 0; b = c; }
+    else             { r = c; g = 0; b = x; }
+
+    return {
+      r: Math.round((r + m) * 255),
+      g: Math.round((g + m) * 255),
+      b: Math.round((b + m) * 255),
+    };
+  }
+
+  function drawColorArea() {
+    const w = colorArea.width;
+    const h = colorArea.height;
+    const hue = Number(hueSlider.value);
+
+    const base = ctx.createLinearGradient(0, 0, w, 0);
+    const rgbHue = hsvToRgb(hue, 1, 1);
+    base.addColorStop(0, "#ffffff");
+    base.addColorStop(1, rgbToHex(rgbHue.r, rgbHue.g, rgbHue.b));
+    ctx.fillStyle = base;
+    ctx.fillRect(0, 0, w, h);
+
+    const valGrad = ctx.createLinearGradient(0, 0, 0, h);
+    valGrad.addColorStop(0, "rgba(0,0,0,0)");
+    valGrad.addColorStop(1, "rgba(0,0,0,1)");
+    ctx.fillStyle = valGrad;
+    ctx.fillRect(0, 0, w, h);
+  }
+
+  function applyBg(hex) {
+    card.style.backgroundColor = hex;
+    bgChip.style.backgroundColor = hex;
+  }
+
+  function applyFontColor(hex) {
+    editable.style.color = hex;
+    fontChip.style.backgroundColor = hex;
+  }
+
+  function applyFontSize(size) {
+    editable.style.fontSize = size + "px";
+  }
+
+  // Aspect Ratio
+  ratioSelect.addEventListener("change", () => {
+    card.style.aspectRatio = ratioSelect.value;
+  });
+
+  // Hex inputs
+  bgHexInput.addEventListener("input", () => {
+    const v = bgHexInput.value;
+    if (isValidHex(v)) applyBg(v);
+  });
+
+  fontHexInput.addEventListener("input", () => {
+    const v = fontHexInput.value;
+    if (isValidHex(v)) applyFontColor(v);
+  });
+
+  // Open color panel
+  function openColorPanel(target) {
+    activeTarget = target;
+    colorPanelLabel.textContent = target === "bg" ? "Background" : "Font color";
+    colorPanel.classList.add("show");
+    drawColorArea();
+  }
+
+  bgChip.addEventListener("click", () => openColorPanel("bg"));
+  fontChip.addEventListener("click", () => openColorPanel("font"));
+
+  colorPanelDone.addEventListener("click", () => {
+    colorPanel.classList.remove("show");
+    activeTarget = null;
+  });
+
+  hueSlider.addEventListener("input", drawColorArea);
+
+  function pickColorFromArea(e) {
+    const rect = colorArea.getBoundingClientRect();
+    let x = e.touches ? e.touches[0].clientX - rect.left : e.clientX - rect.left;
+    let y = e.touches ? e.touches[0].clientY - rect.top  : e.clientY - rect.top;
+    x = Math.max(0, Math.min(rect.width - 1, x));
+    y = Math.max(0, Math.min(rect.height - 1, y));
+    const data = ctx.getImageData(x, y, 1, 1).data;
+    const hex = rgbToHex(data[0], data[1], data[2]);
+
+    if (activeTarget === "bg") {
+      bgHexInput.value = hex;
+      applyBg(hex);
+    } else if (activeTarget === "font") {
+      fontHexInput.value = hex;
+      applyFontColor(hex);
+    }
+  }
+
+  colorArea.addEventListener("mousedown", (e) => {
+    isPicking = true;
+    pickColorFromArea(e);
+  });
+  window.addEventListener("mousemove", (e) => {
+    if (isPicking) pickColorFromArea(e);
+  });
+  window.addEventListener("mouseup", () => { isPicking = false; });
+
+  // Touch support
+  colorArea.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    pickColorFromArea(e);
+  }, { passive: false });
+
+  colorArea.addEventListener("touchmove", (e) => {
+    e.preventDefault();
+    pickColorFromArea(e);
+  }, { passive: false });
+
+  // Font size
+  fontSizeSelect.addEventListener("change", () => {
+    applyFontSize(fontSizeSelect.value);
+  });
+
+  // Bold / Italic
+  boldBtn.addEventListener("click", () => {
+    const isBold = editable.style.fontWeight === "700";
+    editable.style.fontWeight = isBold ? "400" : "700";
+    boldBtn.classList.toggle("active", !isBold);
+  });
+
+  italicBtn.addEventListener("click", () => {
+    const isItalic = editable.style.fontStyle === "italic";
+    editable.style.fontStyle = isItalic ? "normal" : "italic";
+    italicBtn.classList.toggle("active", !isItalic);
+  });
+
+  // Preview (force solid background to avoid white border)
+  previewBtn.addEventListener("click", () => {
+    const cardBg = getComputedStyle(card).backgroundColor || "#000000";
+
+    html2canvas(card, {
+      scale: 4,
+      backgroundColor: cardBg   // no transparent edges
+    })
+      .then((canvas) => {
+        popupImage.src = canvas.toDataURL("image/png");
+        popup.classList.add("show");
+      })
+      .catch(console.error);
+  });
+
+  // Download
+  downloadBtn.addEventListener("click", () => {
+    const link = document.createElement("a");
+    link.download = "text-card.png";
+    link.href = popupImage.src;
+    link.click();
+  });
+
+  // Cancel
+  cancelBtn.addEventListener("click", () => {
+    popup.classList.remove("show");
+  });
+
+  // Initial setup with B/W + 16px
+  applyBg(bgHexInput.value);
+  applyFontColor(fontHexInput.value);
+  applyFontSize(fontSizeSelect.value);
+  drawColorArea();
+</script>
+
+</body>
+</html>
