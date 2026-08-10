@@ -135,13 +135,15 @@
     }
 
     .card-image-wrapper.has-image {
-      display: block;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
     .card-image {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
       display: block;
       border-radius: 4px;
     }
@@ -355,11 +357,11 @@
 
   <!-- Text card -->
   <div class="card" id="card">
+    <div class="editable" id="editable" contenteditable="true" autocapitalize="off" spellcheck="false"></div>
     <div class="card-image-wrapper" id="imageWrapper">
       <img class="card-image" id="cardImage" />
       <button class="remove-image" id="removeImage">&times;</button>
     </div>
-    <div class="editable" id="editable" contenteditable="true" autocapitalize="off" spellcheck="false"></div>
   </div>
 
   <!-- Preview popup -->
