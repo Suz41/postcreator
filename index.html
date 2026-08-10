@@ -2,130 +2,303 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Landscape Text Card (Mobile Only)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>PostCreator — Pro Social Media Post & Card Editor</title>
+  <meta name="description" content="Create stunning social media text cards, quotes, and posts. Customize fonts, colors, layout, aspect ratios, and export high-res PNG images." />
 
-  <!-- Mobile viewport -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@400;600;700&family=Syne:wght@500;700;800&display=swap" rel="stylesheet" />
 
-  <!-- Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet" />
   <!-- html2canvas -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-dark: #09090b;
+      --panel-bg: rgba(18, 18, 22, 0.85);
+      --panel-border: rgba(255, 255, 255, 0.1);
+      --accent: #6366f1;
+      --accent-hover: #4f46e5;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --radius-sm: 6px;
+      --radius-md: 10px;
+      --radius-lg: 16px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
     body {
       min-height: 100vh;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.12) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(168, 85, 247, 0.12) 0px, transparent 50%);
+      font-family: "Inter", sans-serif;
+      color: var(--text-main);
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      gap: 12px;
       padding: 12px;
-      background: #111111;   /* pure black */
-      font-family: "Inter", sans-serif;
-      color: #e5e7eb;
+      gap: 16px;
     }
 
-    /* DESKTOP BLOCKER (for non-mobile) */
-    .desktop-blocker {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      color: #e5e7eb;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 24px;
-      z-index: 9999;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .desktop-blocker strong {
-      display: block;
-      margin-bottom: 8px;
-      font-size: 16px;
-    }
-
-    /* Controls row – flat & mobile-friendly */
-    .controls {
+    /* App Header */
+    .app-header {
       width: 100%;
-      max-width: 480px;
+      max-width: 520px;
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
-      justify-content: flex-start;
-      gap: 10px;
+      justify-content: space-between;
+      padding: 8px 4px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: "Outfit", sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #fff 30%, #a5b4fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 6px;
+      border-radius: 20px;
+      background: rgba(99, 102, 241, 0.2);
+      color: #818cf8;
+      border: 1px solid rgba(99, 102, 241, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* Toolbar & Navigation Tabs */
+    .toolbar-container {
+      width: 100%;
+      max-width: 520px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+    }
+
+    .tool-tabs {
+      display: flex;
+      gap: 4px;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 3px;
+      border-radius: var(--radius-md);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tool-tabs::-webkit-scrollbar { display: none; }
+
+    .tab-btn {
+      flex: 1;
+      min-width: max-content;
+      padding: 6px 12px;
       font-size: 12px;
-    }
-
-    .control { display: flex; gap: 6px; align-items: center; }
-    .control span { opacity: 0.8; }
-
-    .hex-input {
-      width: 74px;
-      padding: 3px 4px;
-      font-size: 11px;
-      border: 1px solid #3f3f3f;
-      background: #000000;
-      color: #e5e7eb;
-      outline: none;
-    }
-
-    .hex-input:focus { border-color: #9ca3af; }
-
-    .color-chip {
-      width: 18px;
-      height: 18px;
-      border: 1px solid #3f3f3f;
+      font-weight: 500;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      border-radius: var(--radius-sm);
       cursor: pointer;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Tab Panels */
+    .tab-panel {
+      display: none;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    .tab-panel.active { display: flex; }
+
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 11px;
+    }
+
+    .control-label {
+      color: var(--text-muted);
+      font-weight: 500;
+      font-size: 11px;
+      white-space: nowrap;
     }
 
     .size-select {
+      padding: 4px 8px;
+      font-size: 11px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: #000000;
+      color: var(--text-main);
+      border-radius: 4px;
+      outline: none;
+      cursor: pointer;
+    }
+    .size-select:focus { border-color: var(--accent); }
+
+    .hex-input {
+      width: 68px;
       padding: 4px 6px;
       font-size: 11px;
-      border: 1px solid #3f3f3f;
+      font-family: monospace;
+      border: 1px solid rgba(255, 255, 255, 0.15);
       background: #000000;
-      color: #e5e7eb;
-      cursor: pointer;
+      color: var(--text-main);
+      border-radius: 4px;
       outline: none;
     }
+    .hex-input:focus { border-color: var(--accent); }
 
+    .color-chip {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      cursor: pointer;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.2);
+      transition: transform 0.15s ease;
+    }
+    .color-chip:active { transform: scale(0.9); }
+
+    /* Action Buttons */
     .btn {
       padding: 6px 14px;
       font-size: 11px;
-      border: 1px solid #3f3f3f;
-      background: #000000;
-      color: #e5e7eb;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
     }
+    .btn:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(255, 255, 255, 0.25); }
+    .btn:active { transform: scale(0.96); }
 
-    .btn:active { transform: scale(0.97); }
+    .btn-accent {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+    .btn-accent:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
 
     .btn-mini {
-      padding: 3px 8px;
+      padding: 4px 8px;
       font-size: 11px;
-      border: 1px solid #3f3f3f;
+      font-weight: 600;
+      border: 1px solid rgba(255, 255, 255, 0.15);
       background: #000000;
-      color: #e5e7eb;
+      color: var(--text-main);
+      border-radius: 4px;
       cursor: pointer;
     }
-
     .btn-mini.active {
-      background: #e5e7eb;
+      background: #ffffff;
       color: #000000;
-      border-color: #e5e7eb;
+      border-color: #ffffff;
     }
 
-    /* Image attachment */
-    .image-upload {
-      display: none;
+    /* Preset Themes Swatches */
+    .theme-swatches {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .theme-swatch {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.2);
+      cursor: pointer;
+      transition: transform 0.15s ease, border-color 0.15s ease;
+    }
+    .theme-swatch:hover { transform: scale(1.15); border-color: #fff; }
+
+    /* Main Workspace & Card Area */
+    .card-workspace {
+      width: 100%;
+      max-width: 520px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px 0;
     }
 
+    .card {
+      width: 100%;
+      max-width: 480px;
+      aspect-ratio: 1 / 1;
+      background: #000000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      gap: 16px;
+      overflow: hidden;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+      transition: aspect-ratio 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.3s ease;
+      position: relative;
+    }
+
+    .editable {
+      width: 100%;
+      background: transparent;
+      color: #ffffff;
+      font-size: 18px;
+      line-height: 1.5;
+      outline: none;
+      border: none;
+      text-align: center;
+      word-wrap: break-word;
+      white-space: normal;
+      font-weight: 400;
+      font-style: normal;
+      transition: font-size 0.2s ease, color 0.2s ease, text-align 0.2s ease;
+    }
+
+    .editable:empty::before {
+      content: "Tap to write your post, quote, or thoughts...";
+      color: rgba(255, 255, 255, 0.4);
+    }
+
+    /* Image Wrapper inside Card */
     .card-image-wrapper {
       position: relative;
       width: 100%;
@@ -134,6 +307,7 @@
       min-height: 0;
       display: none;
       margin: 0 auto;
+      border-radius: 8px;
     }
 
     .card-image-wrapper.has-image {
@@ -154,295 +328,397 @@
       object-fit: contain;
       display: block;
       margin: 0 auto;
-      border-radius: 4px;
+      border-radius: 8px;
       transition: all 0.2s ease;
     }
 
     .remove-image {
       position: absolute;
-      top: 6px;
-      right: 6px;
-      width: 24px;
-      height: 24px;
-      background: rgba(0,0,0,0.7);
-      border: none;
+      top: 8px;
+      right: 8px;
+      width: 26px;
+      height: 26px;
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(255,255,255,0.2);
       color: #fff;
-      font-size: 14px;
+      font-size: 16px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 50%;
+      backdrop-filter: blur(4px);
+      transition: transform 0.15s ease, background 0.15s ease;
     }
+    .remove-image:active { transform: scale(0.9); background: rgba(220, 38, 38, 0.9); }
 
-    /* Text card – mobile width, dynamic ratio */
-    .card {
+    .image-upload { display: none; }
+
+    /* Bottom Quick Action Bar */
+    .quick-bar {
       width: 100%;
-      max-width: 480px;
-      aspect-ratio: 1 / 1; /* Default ratio */
-      background: #000000;    /* pure black */
+      max-width: 520px;
       display: flex;
-      flex-direction: column;
+      gap: 10px;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      padding: 16px;
-      gap: 12px;
-      overflow: hidden;
-      transition: aspect-ratio 0.3s ease; /* Smooth transition when changing size */
     }
 
-    .editable {
-      width: 100%;
-      background: transparent;
-      color: #ffffff;
-      font-size: 16px;          /* default font size */
-      line-height: 1.4;
-      outline: none;
-      border: none;
-      text-align: center;
-      word-wrap: break-word;
-      white-space: normal;
-      font-weight: 400;
-      font-style: normal;
+    /* Custom Color Picker Modal */
+    .color-panel {
+      position: fixed;
+      right: 16px;
+      bottom: 20px;
+      background: var(--panel-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--panel-border);
+      border-radius: var(--radius-lg);
+      padding: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 50;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+    .color-panel.show { display: flex; }
+
+    .color-panel-header {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
-    .editable:empty::before {
-      content: "Type your text here...";
-      color: #6b7280;
+    .color-panel canvas {
+      display: block;
+      border-radius: var(--radius-sm);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      cursor: crosshair;
     }
 
-    /* Preview popup */
+    .color-panel input[type="range"] {
+      width: 160px;
+      accent-color: var(--accent);
+    }
+
+    /* Export / Preview Modal */
     .popup {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(0, 0, 0, 0.92);
+      backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      padding: 10px;
+      gap: 16px;
+      padding: 16px;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.2s ease;
-      z-index: 20;
+      transition: opacity 0.25s ease;
+      z-index: 100;
     }
-
     .popup.show {
       opacity: 1;
       pointer-events: auto;
     }
 
+    .popup-card-frame {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      max-width: 95vw;
+      max-height: 82vh;
+    }
+
     .popup-image {
-      max-width: 92vw;
-      max-height: 80vh;
+      max-width: 90vw;
+      max-height: 75vh;
       object-fit: contain;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.8);
     }
 
     .popup-buttons {
       display: flex;
-      gap: 8px;
-      font-size: 12px;
+      gap: 10px;
     }
 
-    .btn-primary {
-      background: #e5e7eb;
-      color: #000000;
-      border-color: #e5e7eb;
-    }
-
-    .btn-cancel {
-      background: #000000;
-      border-color: #3f3f3f;
-      color: #e5e7eb;
-    }
-
-    /* Small custom color panel (bottom-right) */
-    .color-panel {
+    /* Toast Notification */
+    .toast {
       position: fixed;
-      right: 16px;
-      bottom: 16px;
-      background: #111111;
-      border: 1px solid #3f3f3f;
-      padding: 8px;
-      display: none;
-      flex-direction: column;
-      gap: 6px;
-      z-index: 30;
+      top: 20px;
+      background: rgba(16, 185, 129, 0.9);
+      color: #ffffff;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 8px 16px;
+      border-radius: 20px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transform: translateY(-20px);
+      transition: all 0.3s ease;
+      pointer-events: none;
+      z-index: 120;
     }
-
-    .color-panel.show { display: flex; }
-
-    .color-panel canvas {
-      display: block;
-      border: 1px solid #3f3f3f;
-    }
-
-    .color-panel input[type="range"] {
-      width: 160px;
-    }
-
-    .color-panel-header {
-      font-size: 11px;
-      opacity: 0.8;
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
     }
   </style>
 </head>
 <body>
 
-  <!-- DESKTOP BLOCKER OVERLAY -->
-  <div id="desktopBlocker" class="desktop-blocker">
-    <div>
-      <strong>Mobile Only Tool</strong>
-      This text card editor is designed to work only on mobile devices.<br />
-      Please open this page on your phone to use it.
+  <!-- App Header -->
+  <header class="app-header">
+    <div class="brand">
+      <span>PostCreator</span>
+      <span class="brand-badge">Pro</span>
+    </div>
+    <div class="theme-swatches" title="Preset Color Themes">
+      <div class="theme-swatch" style="background:#000000;" onclick="applyTheme('#000000','#ffffff')"></div>
+      <div class="theme-swatch" style="background:#f9fafb;" onclick="applyTheme('#f9fafb','#111827')"></div>
+      <div class="theme-swatch" style="background:#0f172a;" onclick="applyTheme('#0f172a','#a855f7')"></div>
+      <div class="theme-swatch" style="background:#18181b;" onclick="applyTheme('#18181b','#fbbf24')"></div>
+      <div class="theme-swatch" style="background:#064e3b;" onclick="applyTheme('#064e3b','#ecfdf5')"></div>
+      <div class="theme-swatch" style="background:#450a0a;" onclick="applyTheme('#450a0a','#fca5a5')"></div>
+    </div>
+  </header>
+
+  <!-- Controls Bar with Tabs -->
+  <div class="toolbar-container">
+    <nav class="tool-tabs">
+      <button class="tab-btn active" onclick="switchTab('tab-canvas', this)">Canvas</button>
+      <button class="tab-btn" onclick="switchTab('tab-text', this)">Typography</button>
+      <button class="tab-btn" onclick="switchTab('tab-image', this)">Image</button>
+      <button class="tab-btn" onclick="switchTab('tab-style', this)">Styles</button>
+    </nav>
+
+    <!-- Canvas Tab -->
+    <div id="tab-canvas" class="tab-panel active">
+      <div class="control-group">
+        <span class="control-label">Ratio</span>
+        <select id="ratioSelect" class="size-select">
+          <option value="1 / 1" selected>1:1 Square</option>
+          <option value="4 / 5">4:5 Portrait</option>
+          <option value="9 / 16">9:16 Story/Reel</option>
+          <option value="16 / 9">16:9 Wide</option>
+          <option value="1.91 / 1">1.91:1 Link</option>
+          <option value="3 / 2">3:2 Photo</option>
+          <option value="4 / 3">4:3 Standard</option>
+          <option value="2 / 1">2:1 Banner</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">BG</span>
+        <input type="text" id="bgHex" class="hex-input" value="#000000" maxlength="7" />
+        <div id="bgChip" class="color-chip"></div>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Corners</span>
+        <select id="radiusSelect" class="size-select">
+          <option value="0px">Sharp</option>
+          <option value="12px" selected>Rounded</option>
+          <option value="24px">Soft</option>
+          <option value="36px">Pill</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Typography Tab -->
+    <div id="tab-text" class="tab-panel">
+      <div class="control-group">
+        <span class="control-label">Font</span>
+        <select id="fontFamily" class="size-select">
+          <option value="Inter" selected>Inter</option>
+          <option value="Poppins">Poppins</option>
+          <option value="Outfit">Outfit</option>
+          <option value="Playfair Display">Playfair</option>
+          <option value="Syne">Syne</option>
+          <option value="Space Grotesk">Space Grotesk</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Color</span>
+        <input type="text" id="fontHex" class="hex-input" value="#ffffff" maxlength="7" />
+        <div id="fontChip" class="color-chip"></div>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Size</span>
+        <select id="fontSize" class="size-select">
+          <option value="14">14px</option>
+          <option value="16">16px</option>
+          <option value="18" selected>18px</option>
+          <option value="20">20px</option>
+          <option value="24">24px</option>
+          <option value="28">28px</option>
+          <option value="32">32px</option>
+          <option value="40">40px</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <button class="btn-mini" id="boldBtn" title="Toggle Bold">B</button>
+        <button class="btn-mini" id="italicBtn" title="Toggle Italic"><i>I</i></button>
+        <button class="btn-mini" id="quoteBtn" title="Add Quote Marks">“”</button>
+      </div>
+
+      <div class="control-group">
+        <button class="btn-mini" id="alignLeft" title="Align Left">&#8676;</button>
+        <button class="btn-mini active" id="alignCenter" title="Align Center">&#8596;</button>
+        <button class="btn-mini" id="alignRight" title="Align Right">&#8677;</button>
+      </div>
+    </div>
+
+    <!-- Image Tab -->
+    <div id="tab-image" class="tab-panel">
+      <button class="btn" id="imageBtn">📷 Upload Image</button>
+
+      <div class="control-group" id="imgFitControl" style="display: none;">
+        <span class="control-label">Fit</span>
+        <select id="imgFitSelect" class="size-select">
+          <option value="contain" selected>Fit (Original)</option>
+          <option value="cover">Cover (Fill)</option>
+          <option value="1 / 1">1:1 Square</option>
+          <option value="4 / 5">4:5 Portrait</option>
+          <option value="16 / 9">16:9 Wide</option>
+          <option value="4 / 3">4:3 Standard</option>
+        </select>
+      </div>
+
+      <div class="control-group" id="imgPositionControl" style="display: none;">
+        <span class="control-label">Order</span>
+        <select id="imgPosSelect" class="size-select">
+          <option value="below" selected>Below Text</option>
+          <option value="above">Above Text</option>
+        </select>
+      </div>
+
+      <input type="file" id="imageUpload" class="image-upload" accept="image/*" />
+    </div>
+
+    <!-- Styles Tab -->
+    <div id="tab-style" class="tab-panel">
+      <div class="control-group">
+        <span class="control-label">Spacing</span>
+        <select id="lineHeightSelect" class="size-select">
+          <option value="1.2">Tight (1.2)</option>
+          <option value="1.5" selected>Normal (1.5)</option>
+          <option value="1.8">Relaxed (1.8)</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <span class="control-label">Padding</span>
+        <select id="paddingSelect" class="size-select">
+          <option value="16px">Compact</option>
+          <option value="24px" selected>Balanced</option>
+          <option value="36px">Spacious</option>
+        </select>
+      </div>
+
+      <button class="btn" id="fixBtn" title="AI Grammar Fix">✨ AI Fix</button>
     </div>
   </div>
 
-  <!-- Controls -->
-  <div class="controls">
-    <div class="control">
-      <span>Ratio</span>
-      <select id="ratioSelect" class="size-select">
-        <option value="1 / 1" selected>1:1 (Square)</option>
-        <option value="4 / 5">4:5 (Portrait)</option>
-        <option value="1.91 / 1">1.91:1 (Social Link)</option>
-        <option value="16 / 9">16:9 (Widescreen)</option>
-        <option value="3 / 2">3:2 (Classic Photo)</option>
-        <option value="4 / 3">4:3 (Standard)</option>
-        <option value="2 / 1">2:1 (Cinematic)</option>
-      </select>
+  <!-- Workspace Card -->
+  <main class="card-workspace">
+    <div class="card" id="card">
+      <div class="editable" id="editable" contenteditable="true" autocapitalize="off" spellcheck="false"></div>
+      <div class="card-image-wrapper" id="imageWrapper">
+        <img class="card-image" id="cardImage" alt="Uploaded post media" />
+        <button class="remove-image" id="removeImage" data-html2canvas-ignore="true" title="Remove image">&times;</button>
+      </div>
     </div>
+  </main>
 
-    <div class="control">
-      <span>BG</span>
-      <input type="text" id="bgHex" class="hex-input" value="#000000" maxlength="7" />
-      <div id="bgChip" class="color-chip"></div>
-    </div>
+  <!-- Quick Action Bar -->
+  <footer class="quick-bar">
+    <button class="btn" id="clearBtn">🗑️ Clear</button>
+    <button class="btn btn-accent" id="previewBtn">✨ Export High-Res PNG</button>
+  </footer>
 
-    <div class="control">
-      <span>Font</span>
-      <input type="text" id="fontHex" class="hex-input" value="#ffffff" maxlength="7" />
-      <div id="fontChip" class="color-chip"></div>
-    </div>
-
-    <div class="control">
-      <span>Type</span>
-      <select id="fontFamily" class="size-select">
-        <option value="Inter" selected>Inter</option>
-        <option value="Poppins">Poppins</option>
-      </select>
-    </div>
-
-    <div class="control">
-      <span>Size</span>
-      <select id="fontSize" class="size-select">
-        <option value="14">14px</option>
-        <option value="16" selected>16px</option>
-        <option value="18">18px</option>
-        <option value="20">20px</option>
-        <option value="22">22px</option>
-        <option value="24">24px</option>
-        <option value="28">28px</option>
-        <option value="32">32px</option>
-      </select>
-    </div>
-
-    <div class="control">
-      <button class="btn-mini" id="boldBtn">B</button>
-      <button class="btn-mini" id="italicBtn"><i>I</i></button>
-    </div>
-
-    <div class="control">
-      <button class="btn-mini" id="alignLeft">&#8676;</button>
-      <button class="btn-mini active" id="alignCenter">&#8596;</button>
-      <button class="btn-mini" id="alignRight">&#8677;</button>
-    </div>
-
-    <button class="btn" id="fixBtn">Fix</button>
-    <button class="btn" id="imageBtn">Image</button>
-    <div class="control" id="imgFitControl" style="display: none;">
-      <span>Img Fit</span>
-      <select id="imgFitSelect" class="size-select">
-        <option value="contain" selected>Fit (Original)</option>
-        <option value="cover">Cover (Fill)</option>
-        <option value="1 / 1">1:1 Square</option>
-        <option value="4 / 5">4:5 Portrait</option>
-        <option value="16 / 9">16:9 Wide</option>
-        <option value="4 / 3">4:3 Standard</option>
-      </select>
-    </div>
-    <button class="btn" id="previewBtn">Preview</button>
-    <button class="btn" id="clearBtn">Clear</button>
-    <input type="file" id="imageUpload" class="image-upload" accept="image/*" />
-  </div>
-
-  <!-- Text card -->
-  <div class="card" id="card">
-    <div class="editable" id="editable" contenteditable="true" autocapitalize="off" spellcheck="false"></div>
-    <div class="card-image-wrapper" id="imageWrapper">
-      <img class="card-image" id="cardImage" alt="Uploaded post image" />
-      <button class="remove-image" id="removeImage" data-html2canvas-ignore="true">&times;</button>
-    </div>
-  </div>
-
-  <!-- Preview popup -->
+  <!-- Preview / Export Modal -->
   <div class="popup" id="popup">
-    <img id="popupImage" class="popup-image" />
-    <div class="popup-buttons">
-      <button class="btn btn-primary" id="downloadBtn">Download</button>
-      <button class="btn btn-cancel" id="cancelBtn">Cancel</button>
+    <div class="popup-card-frame">
+      <img id="popupImage" class="popup-image" alt="Post preview render" />
+      <div class="popup-buttons">
+        <button class="btn btn-accent" id="downloadBtn">📥 Save Image</button>
+        <button class="btn" id="cancelBtn">Close</button>
+      </div>
     </div>
   </div>
 
-  <!-- Small custom color picker panel -->
+  <!-- Small Custom Color Picker Panel -->
   <div class="color-panel" id="colorPanel">
-    <div class="color-panel-header" id="colorPanelLabel">Color</div>
+    <div class="color-panel-header">
+      <span id="colorPanelLabel">Custom Color</span>
+    </div>
     <canvas id="colorArea" width="160" height="100"></canvas>
     <input type="range" id="hueSlider" min="0" max="360" value="210" />
-    <button class="btn-mini" id="colorPanelDone">Done</button>
+    <button class="btn-mini" id="colorPanelDone" style="align-self: flex-end;">Done</button>
   </div>
 
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">Saved!</div>
+
 <script>
-  // --- MOBILE-ONLY CHECK ---
-  function isMobileDevice() {
-    return /Android|webOS|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+  // Tab switching logic
+  function switchTab(tabId, el) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById(tabId).classList.add('active');
   }
 
-  const desktopBlocker = document.getElementById("desktopBlocker");
-  if (!isMobileDevice()) {
-    desktopBlocker.style.display = "flex";
-  }
+  // Core Elements
+  const card            = document.getElementById("card");
+  const editable        = document.getElementById("editable");
+  const ratioSelect     = document.getElementById("ratioSelect");
+  const radiusSelect    = document.getElementById("radiusSelect");
+  const bgHexInput      = document.getElementById("bgHex");
+  const fontHexInput    = document.getElementById("fontHex");
+  const bgChip          = document.getElementById("bgChip");
+  const fontChip        = document.getElementById("fontChip");
+  const fontFamilySelect= document.getElementById("fontFamily");
+  const fontSizeSelect  = document.getElementById("fontSize");
+  const boldBtn         = document.getElementById("boldBtn");
+  const italicBtn       = document.getElementById("italicBtn");
+  const quoteBtn        = document.getElementById("quoteBtn");
 
-  // Core elements
-  const card           = document.getElementById("card");
-  const editable       = document.getElementById("editable");
+  const lineHeightSelect= document.getElementById("lineHeightSelect");
+  const paddingSelect   = document.getElementById("paddingSelect");
 
-  const ratioSelect    = document.getElementById("ratioSelect");
-  const bgHexInput     = document.getElementById("bgHex");
-  const fontHexInput   = document.getElementById("fontHex");
-  const bgChip         = document.getElementById("bgChip");
-  const fontChip       = document.getElementById("fontChip");
+  const previewBtn      = document.getElementById("previewBtn");
+  const popup           = document.getElementById("popup");
+  const popupImage      = document.getElementById("popupImage");
+  const downloadBtn     = document.getElementById("downloadBtn");
+  const cancelBtn       = document.getElementById("cancelBtn");
+  const toast           = document.getElementById("toast");
 
-  const fontSizeSelect = document.getElementById("fontSize");
-  const boldBtn        = document.getElementById("boldBtn");
-  const italicBtn      = document.getElementById("italicBtn");
-
-  const previewBtn     = document.getElementById("previewBtn");
-  const popup          = document.getElementById("popup");
-  const popupImage     = document.getElementById("popupImage");
-  const downloadBtn    = document.getElementById("downloadBtn");
-  const cancelBtn      = document.getElementById("cancelBtn");
-
-  const colorPanel     = document.getElementById("colorPanel");
-  const colorPanelLabel= document.getElementById("colorPanelLabel");
-  const colorArea      = document.getElementById("colorArea");
-  const hueSlider      = document.getElementById("hueSlider");
-  const colorPanelDone = document.getElementById("colorPanelDone");
-  const ctx            = colorArea.getContext("2d");
+  // Color picker panel
+  const colorPanel      = document.getElementById("colorPanel");
+  const colorPanelLabel = document.getElementById("colorPanelLabel");
+  const colorArea       = document.getElementById("colorArea");
+  const hueSlider       = document.getElementById("hueSlider");
+  const colorPanelDone  = document.getElementById("colorPanelDone");
+  const ctx             = colorArea.getContext("2d");
 
   let activeTarget = null; // "bg" or "font"
   let isPicking = false;
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2000);
+  }
 
   function isValidHex(hex) {
     return /^#[0-9a-fA-F]{6}$/.test(hex);
@@ -458,7 +734,6 @@
     let x = c * (1 - Math.abs((h / 60) % 2 - 1));
     let m = v - c;
     let r, g, b;
-
     if (h < 60)      { r = c; g = x; b = 0; }
     else if (h < 120){ r = x; g = c; b = 0; }
     else if (h < 180){ r = 0; g = c; b = x; }
@@ -495,37 +770,41 @@
   function applyBg(hex) {
     card.style.backgroundColor = hex;
     bgChip.style.backgroundColor = hex;
+    bgHexInput.value = hex;
   }
 
   function applyFontColor(hex) {
     editable.style.color = hex;
     fontChip.style.backgroundColor = hex;
+    fontHexInput.value = hex;
   }
 
-  function applyFontSize(size) {
-    editable.style.fontSize = size + "px";
+  function applyTheme(bg, text) {
+    applyBg(bg);
+    applyFontColor(text);
+    showToast("Theme applied!");
   }
 
-  // Aspect Ratio
+  // Event Listeners
   ratioSelect.addEventListener("change", () => {
     card.style.aspectRatio = ratioSelect.value;
   });
 
-  // Hex inputs
+  radiusSelect.addEventListener("change", () => {
+    card.style.borderRadius = radiusSelect.value;
+  });
+
   bgHexInput.addEventListener("input", () => {
-    const v = bgHexInput.value;
-    if (isValidHex(v)) applyBg(v);
+    if (isValidHex(bgHexInput.value)) applyBg(bgHexInput.value);
   });
 
   fontHexInput.addEventListener("input", () => {
-    const v = fontHexInput.value;
-    if (isValidHex(v)) applyFontColor(v);
+    if (isValidHex(fontHexInput.value)) applyFontColor(fontHexInput.value);
   });
 
-  // Open color panel
   function openColorPanel(target) {
     activeTarget = target;
-    colorPanelLabel.textContent = target === "bg" ? "Background" : "Font color";
+    colorPanelLabel.textContent = target === "bg" ? "Background Color" : "Font Color";
     colorPanel.classList.add("show");
     drawColorArea();
   }
@@ -549,47 +828,22 @@
     const data = ctx.getImageData(x, y, 1, 1).data;
     const hex = rgbToHex(data[0], data[1], data[2]);
 
-    if (activeTarget === "bg") {
-      bgHexInput.value = hex;
-      applyBg(hex);
-    } else if (activeTarget === "font") {
-      fontHexInput.value = hex;
-      applyFontColor(hex);
-    }
+    if (activeTarget === "bg") applyBg(hex);
+    else if (activeTarget === "font") applyFontColor(hex);
   }
 
-  colorArea.addEventListener("mousedown", (e) => {
-    isPicking = true;
-    pickColorFromArea(e);
-  });
-  window.addEventListener("mousemove", (e) => {
-    if (isPicking) pickColorFromArea(e);
-  });
+  colorArea.addEventListener("mousedown", (e) => { isPicking = true; pickColorFromArea(e); });
+  window.addEventListener("mousemove", (e) => { if (isPicking) pickColorFromArea(e); });
   window.addEventListener("mouseup", () => { isPicking = false; });
 
-  // Touch support
-  colorArea.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    pickColorFromArea(e);
-  }, { passive: false });
+  colorArea.addEventListener("touchstart", (e) => { e.preventDefault(); pickColorFromArea(e); }, { passive: false });
+  colorArea.addEventListener("touchmove", (e) => { e.preventDefault(); pickColorFromArea(e); }, { passive: false });
 
-  colorArea.addEventListener("touchmove", (e) => {
-    e.preventDefault();
-    pickColorFromArea(e);
-  }, { passive: false });
+  fontFamilySelect.addEventListener("change", () => { editable.style.fontFamily = fontFamilySelect.value; });
+  fontSizeSelect.addEventListener("change", () => { editable.style.fontSize = fontSizeSelect.value + "px"; });
+  lineHeightSelect.addEventListener("change", () => { editable.style.lineHeight = lineHeightSelect.value; });
+  paddingSelect.addEventListener("change", () => { card.style.padding = paddingSelect.value; });
 
-  // Font family
-  const fontFamilySelect = document.getElementById("fontFamily");
-  fontFamilySelect.addEventListener("change", () => {
-    editable.style.fontFamily = fontFamilySelect.value;
-  });
-
-  // Font size
-  fontSizeSelect.addEventListener("change", () => {
-    applyFontSize(fontSizeSelect.value);
-  });
-
-  // Bold / Italic
   boldBtn.addEventListener("click", () => {
     const isBold = editable.style.fontWeight === "700";
     editable.style.fontWeight = isBold ? "400" : "700";
@@ -602,7 +856,17 @@
     italicBtn.classList.toggle("active", !isItalic);
   });
 
-  // Text alignment
+  quoteBtn.addEventListener("click", () => {
+    let current = editable.textContent.trim();
+    if (!current) return;
+    if (current.startsWith("“") && current.endsWith("”")) {
+      editable.textContent = current.slice(1, -1);
+    } else {
+      editable.textContent = "“" + current + "”";
+    }
+  });
+
+  // Alignment
   const alignLeft = document.getElementById("alignLeft");
   const alignCenter = document.getElementById("alignCenter");
   const alignRight = document.getElementById("alignRight");
@@ -618,75 +882,16 @@
   alignCenter.addEventListener("click", () => setAlignment("center", alignCenter));
   alignRight.addEventListener("click", () => setAlignment("right", alignRight));
 
-  // AI sentence fix (LanguageTool — free, works from browser)
-  const fixBtn = document.getElementById("fixBtn");
-  const LT_API = "https://api.languagetool.org/v2/check";
-
-  fixBtn.addEventListener("click", async () => {
-    const text = editable.textContent.trim();
-    if (!text) return;
-
-    fixBtn.textContent = "...";
-    fixBtn.disabled = true;
-
-    try {
-      const res = await fetch(LT_API, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          text: text,
-          language: "en-US",
-          enabledOnly: "false",
-          level: "picky"
-        })
-      });
-      const data = await res.json();
-
-      if (!data.matches || data.matches.length === 0) {
-        fixBtn.textContent = "OK!";
-        setTimeout(() => { fixBtn.textContent = "Fix"; }, 1200);
-        fixBtn.disabled = false;
-        return;
-      }
-
-      // Apply corrections end-to-start so offsets stay valid
-      let corrected = text;
-      const fixes = data.matches
-        .filter(m => m.replacements && m.replacements.length > 0)
-        .sort((a, b) => b.offset - a.offset);
-
-      for (const match of fixes) {
-        const before = corrected.slice(0, match.offset);
-        const after = corrected.slice(match.offset + match.length);
-        corrected = before + match.replacements[0].value + after;
-      }
-
-      editable.textContent = corrected;
-      fixBtn.textContent = fixes.length + " fix" + (fixes.length > 1 ? "es" : "");
-      setTimeout(() => { fixBtn.textContent = "Fix"; }, 1500);
-    } catch (e) {
-      fixBtn.textContent = "Err";
-      setTimeout(() => { fixBtn.textContent = "Fix"; }, 1500);
-    }
-
-    fixBtn.disabled = false;
-  });
-
-  // Clear
-  const clearBtn = document.getElementById("clearBtn");
-  clearBtn.addEventListener("click", () => {
-    editable.textContent = "";
-    editable.focus();
-  });
-
-  // Image upload & fit ratio controls
-  const imageBtn      = document.getElementById("imageBtn");
-  const imageUpload   = document.getElementById("imageUpload");
-  const imageWrapper  = document.getElementById("imageWrapper");
-  const cardImage     = document.getElementById("cardImage");
-  const removeImage   = document.getElementById("removeImage");
-  const imgFitControl = document.getElementById("imgFitControl");
-  const imgFitSelect  = document.getElementById("imgFitSelect");
+  // Image Upload & Fit Controls
+  const imageBtn          = document.getElementById("imageBtn");
+  const imageUpload       = document.getElementById("imageUpload");
+  const imageWrapper      = document.getElementById("imageWrapper");
+  const cardImage         = document.getElementById("cardImage");
+  const removeImage       = document.getElementById("removeImage");
+  const imgFitControl     = document.getElementById("imgFitControl");
+  const imgFitSelect      = document.getElementById("imgFitSelect");
+  const imgPositionControl= document.getElementById("imgPositionControl");
+  const imgPosSelect      = document.getElementById("imgPosSelect");
 
   imageBtn.addEventListener("click", () => imageUpload.click());
 
@@ -703,8 +908,9 @@
       cardImage.style.height = "auto";
       imgFitSelect.value = "contain";
       imageWrapper.classList.add("has-image");
-      card.style.flexDirection = "column";
       imgFitControl.style.display = "flex";
+      imgPositionControl.style.display = "flex";
+      showToast("Image loaded!");
     };
     reader.readAsDataURL(file);
   });
@@ -718,8 +924,8 @@
     imgFitSelect.value = "contain";
     imageWrapper.classList.remove("has-image");
     imageUpload.value = "";
-    card.style.flexDirection = "";
     imgFitControl.style.display = "none";
+    imgPositionControl.style.display = "none";
   });
 
   imgFitSelect.addEventListener("change", () => {
@@ -742,39 +948,119 @@
     }
   });
 
-  // Preview (1080p JPEG)
+  imgPosSelect.addEventListener("change", () => {
+    if (imgPosSelect.value === "above") {
+      card.insertBefore(imageWrapper, editable);
+    } else {
+      card.appendChild(imageWrapper);
+    }
+  });
+
+  // AI Grammar Fix (LanguageTool API)
+  const fixBtn = document.getElementById("fixBtn");
+  const LT_API = "https://api.languagetool.org/v2/check";
+
+  fixBtn.addEventListener("click", async () => {
+    const text = editable.textContent.trim();
+    if (!text) return;
+
+    fixBtn.textContent = "✨ checking...";
+    fixBtn.disabled = true;
+
+    try {
+      const res = await fetch(LT_API, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          text: text,
+          language: "en-US",
+          enabledOnly: "false",
+          level: "picky"
+        })
+      });
+      const data = await res.json();
+
+      if (!data.matches || data.matches.length === 0) {
+        showToast("Text is perfect!");
+        fixBtn.textContent = "✨ AI Fix";
+        fixBtn.disabled = false;
+        return;
+      }
+
+      let corrected = text;
+      const fixes = data.matches
+        .filter(m => m.replacements && m.replacements.length > 0)
+        .sort((a, b) => b.offset - a.offset);
+
+      for (const match of fixes) {
+        const before = corrected.slice(0, match.offset);
+        const after = corrected.slice(match.offset + match.length);
+        corrected = before + match.replacements[0].value + after;
+      }
+
+      editable.textContent = corrected;
+      showToast(fixes.length + " grammar fix" + (fixes.length > 1 ? "es" : "") + " applied!");
+    } catch (e) {
+      showToast("Error checking text");
+    }
+
+    fixBtn.textContent = "✨ AI Fix";
+    fixBtn.disabled = false;
+  });
+
+  // Clear
+  const clearBtn = document.getElementById("clearBtn");
+  clearBtn.addEventListener("click", () => {
+    editable.textContent = "";
+    editable.focus();
+    showToast("Cleared text");
+  });
+
+  // Export & Preview (1080p High-Res)
   previewBtn.addEventListener("click", () => {
     const cardBg = getComputedStyle(card).backgroundColor || "#000000";
-    const scale = 1080 / card.offsetWidth;
+    const targetScale = Math.max(2, 1080 / card.offsetWidth);
+
+    previewBtn.textContent = "Generating...";
+    previewBtn.disabled = true;
 
     html2canvas(card, {
-      scale: scale,
-      backgroundColor: cardBg
+      scale: targetScale,
+      backgroundColor: cardBg,
+      useCORS: true,
+      allowTaint: true
     })
       .then((canvas) => {
-        popupImage.src = canvas.toDataURL("image/jpeg", 0.95);
+        popupImage.src = canvas.toDataURL("image/png", 1.0);
         popup.classList.add("show");
+        previewBtn.textContent = "✨ Export High-Res PNG";
+        previewBtn.disabled = false;
       })
-      .catch(console.error);
+      .catch((err) => {
+        console.error(err);
+        showToast("Export failed");
+        previewBtn.textContent = "✨ Export High-Res PNG";
+        previewBtn.disabled = false;
+      });
   });
 
-  // Download
+  // Download Image
   downloadBtn.addEventListener("click", () => {
     const link = document.createElement("a");
-    link.download = "text-card.jpg";
+    link.download = "postcreator-" + Date.now() + ".png";
     link.href = popupImage.src;
     link.click();
+    showToast("Image downloaded!");
   });
 
-  // Cancel
+  // Cancel Preview
   cancelBtn.addEventListener("click", () => {
     popup.classList.remove("show");
   });
 
-  // Initial setup with B/W + 16px
+  // Initial setup
   applyBg(bgHexInput.value);
   applyFontColor(fontHexInput.value);
-  applyFontSize(fontSizeSelect.value);
   drawColorArea();
 </script>
 
