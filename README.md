@@ -1,97 +1,100 @@
-# PostCreator Pro 🚀
+# PostCreator Pro
 
-> Create stunning, high-definition Instagram quote cards, carousels, and Twitter/X-style multi-image posts in seconds.
+A lightweight, high-precision browser studio for generating publication-ready social media cards, carousels, and quote visuals.
 
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-suz41.github.io%2Fpostcreator-6366f1?style=for-the-badge&logo=githubpages&logoColor=white)](https://suz41.github.io/postcreator/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.7-blue?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Vite](https://img.shields.io/badge/Vite-6.0-646CFF?style=for-the-badge&logo=vite&logoColor=white)](https://vitejs.dev/)
-[![Tests](https://img.shields.io/badge/Tests-Playwright%20%2B%20Vitest-brightgreen?style=for-the-badge&logo=vitest&logoColor=white)](https://vitest.dev/)
+- **Live Application**: [https://suz41.github.io/postcreator/](https://suz41.github.io/postcreator/)
+- **Source Repository**: [https://github.com/Suz41/postcreator](https://github.com/Suz41/postcreator)
 
 ---
 
-## ✨ Features
+## Overview
 
-### 📸 Twitter / X Multi-Image Grid (1–4 Images)
-- **Signature Layouts**: Supports 1, 2, 3, or 4 images with Twitter/X aspect ratios:
-  - **1 Image**: 16:9 full-width landscape banner.
-  - **2 Images**: Two 50/50 vertical split columns.
-  - **3 Images**: Left lead image + two stacked right cells.
-  - **4 Images**: 2×2 quad grid.
-- **Flexible Import**:
-  - Multi-file selector (`Upload Image(s)`).
-  - Incremental `+ Add` button (up to 4 images).
-  - Direct image **URL** import modal.
-  - **Drag & drop** files directly onto the card.
-  - **Clipboard paste** (`Ctrl+V` / `Cmd+V`).
-- **Individual Controls**: Hover/touch close badge (`×`) on each image cell to remove specific photos independently.
+### Purpose
+
+Content creators, developers, and brands frequently need to generate branded quote graphics, announcement slides, carousel cards, and multi-image posts for platforms such as Instagram, Twitter/X, and LinkedIn.
+
+Traditional desktop editing suites require cumbersome setup, manual canvas alignment, and manual aspect ratio math. Meanwhile, standard mobile editors frequently introduce lossy compression, distorted image scaling, and clustered watermarks that ruin visual balance.
+
+PostCreator addresses these issues by delivering a focused, client-side card studio that operates entirely inside the browser. It combines responsive typography, Twitter-style multi-image grid layouts, vector brand placement, and un-distorted canvas exports into a streamlined workflow with zero account requirements, zero tracking, and zero server latency.
 
 ---
 
-### 🏷️ Brand & Watermark Studio
-- **Vector Quality**: Powered by master vector SVG artwork (`BBOG-white.svg` and `BBOG-Black.svg`) with 2160×2160 ultra-HD rendering for zero pixelation.
-- **Dynamic Palette Adaptation**: Automatically toggles between high-contrast white and dark logo variants based on background luminescence.
-- **Split Corner Layout**:
-  - Places Brand Logo in the bottom-right corner and `@username` handle in the bottom-left corner (or vice-versa).
-  - Prevents username and logo clustering.
-- **Dedicated Display Modes**:
-  - `Logo + User`: Full watermark with split corners.
-  - `Logo Only`: Clean minimal branding.
+## Core Capabilities
+
+### 1. Twitter / X Multi-Image Grid
+- **Structured Grid Layouts**: Dynamically formats 1 to 4 attached images into Twitter/X signature presentations:
+  - 1 Image: 16:9 full-width landscape banner.
+  - 2 Images: 50/50 dual vertical split columns.
+  - 3 Images: Full-height primary lead cell on the left with two stacked cells on the right.
+  - 4 Images: 2x2 quad matrix.
+- **Versatile Image Ingestion**:
+  - Multi-file desktop picker (`Upload Image(s)`).
+  - Incremental cell addition (`+ Add`) up to the 4-item cap.
+  - Remote image URL import dialog (`URL`).
+  - Native drag-and-drop directly onto the card preview.
+  - Direct clipboard paste (`Ctrl+V` / `Cmd+V`).
+- **Individual Item Management**: Each cell features an isolated removal badge to prune specific images without resetting the full set.
+
+### 2. Brand & Watermark Placement
+- **Vector Fidelity**: Powered by master SVG vector paths and high-resolution 2160x2160 assets, eliminating raster blur across all screen densities.
+- **Dynamic Palette Adaptation**: Evaluates the canvas background luminance and automatically switches between white and dark watermark logos to guarantee high-contrast legibility.
+- **Split-Corner Geometry**: Offsets the brand mark and social handle across opposite corners (e.g., logo at bottom-right, `@username` at bottom-left) to reflect professional Instagram editorial standards.
+- **Display Configurations**:
+  - `Logo + User`: Full watermark with opposite-corner spacing.
+  - `Logo Only`: Minimalist brand mark.
   - `User Only`: Solo social handle.
-- **Sizing & Opacity**: Clamped 16px to 34px height with watermark opacity presets from 100% Solid down to 20% Ghost.
-- **Interactive Editing**: Click directly on the `@username` in the card preview to edit inline with real-time toolbar synchronization.
+- **Scale and Opacity Controls**: Fine-grained logo sizing from 16px to 34px, with opacity presets ranging from 100% Solid down to 20% Ghost.
+- **Inline Editing**: Double-click or select the `@username` text directly on the canvas to update the handle in real time.
+
+### 3. Balanced Typography & True Centering
+- **Zero-Shift Vertical Centering**: Employs balanced top and bottom padding calculations. Adding, removing, or repositioning the watermark logo never shifts the core text away from the vertical center of the card.
+- **Curated Typefaces**: Integrated Google Fonts including Inter, Poppins, Outfit, Playfair Display, and Syne.
+- **Text Controls**: Font size (12px to 48px), bold, italic, line-height presets (1.2, 1.5, 1.8), and alignment (Left, Center, Right).
+- **Built-in Grammar Correction**: Offline, zero-latency natural language processing that corrects typos, punctuation errors, and contractions locally.
+
+### 4. Canvas Geometry & Color Engine
+- **Aspect Ratio Presets**: 1:1 Square, 4:5 Portrait (Instagram carousel standard), 9:16 Story/Reel, 16:9 Landscape, 1.91:1, 4:3, 3:2, and 2:1.
+- **Curated Color Palettes**: Single-click themes including Onyx Black, Pure White, Slate Navy, Zinc Charcoal, Emerald Deep, Crimson Ruby, and Cobalt Royal.
+- **Interactive 2D Color Picker**: HSV saturation and brightness selector throttled via `requestAnimationFrame` for stutter-free 60 FPS scrubbing.
+- **Container Styling**: Adjustable corner rounding (0px to 24px) and edge padding (16px to 36px).
+
+### 5. High-Definition Un-Squeezed PNG Export
+- **Aspect-Fit Pre-Cropping**: Solves the known `html2canvas` limitation regarding CSS `object-fit: cover` and `contain` by pre-rendering image buffers to exact container aspect ratios before canvas capture.
+- **Logo Dimension Preservation**: Locks the explicit pixel height and aspect ratio of brand watermarks during high-DPI scaling.
+- **Modal Preview & Direct Download**: Inspect the final output canvas in a full modal preview before triggering an instantaneous high-resolution PNG download.
 
 ---
 
-### ✍️ Typography & Centered Layout
-- **True Vertical Centering**: Balanced flexbox padding guarantees that text remains rock-solid in the dead center of the card when adding or removing logos.
-- **Curated Google Fonts**: `Inter`, `Poppins`, `Outfit`, `Playfair Display`, and `Syne`.
-- **Formatting Tools**: Bold, Italic, Text Alignment (Left, Center, Right), Font Size (12px to 48px), and Line Height (1.2, 1.5, 1.8).
-- **Built-in AI Grammar Polish**: One-click local AI fix for typos, punctuation, and contractions with zero external network latency.
+## Performance & Optimization
+
+PostCreator is engineered for minimal resource consumption and fast initial load times:
+
+| Metric | Before Optimization | After Optimization | Delta |
+| :--- | :--- | :--- | :--- |
+| Initial JavaScript Bundle | 1,158.80 kB | 24.83 kB (8.74 kB gzip) | -97.8% |
+| Blocking External Scripts | 1 CDN script | 0 (eliminated) | -100% |
+| Grammar / NLP Engine | Eagerly bundled | Lazy-loaded on demand | Loaded only when clicked |
+| Canvas Export Engine | Monolithic bundle | Dedicated split chunk | Loaded only on export |
+| Color Scrubbing Frame Rate | Unthrottled mouse events | `requestAnimationFrame` | Steady 60 FPS |
 
 ---
 
-### 🎨 Color & Canvas Styling
-- **Aspect Ratios**: 1:1 (Square), 4:5 (Instagram Portrait), 9:16 (Story/Reel), 16:9 (Landscape), 1.91:1, 4:3, 3:2, and 2:1.
-- **Palette Presets**: Instant one-click themes including Onyx Black, Pure White, Slate Navy, Zinc Charcoal, Emerald Deep, Crimson Ruby, and Cobalt Royal.
-- **Interactive Color Picker**: 2D saturation/brightness field throttled via `requestAnimationFrame` for smooth 60 FPS dragging.
-- **Custom Borders & Padding**: Adjustable card corner radius (`0px` to `24px`) and margins (`16px` to `36px`).
+## Technical Stack
+
+- **Application Logic**: TypeScript (Strict Mode)
+- **Markup & Styling**: Semantic HTML5, Vanilla CSS3 (Flexbox & CSS Grid)
+- **Build System**: Vite 6
+- **Canvas Rendering**: html2canvas with custom aspect-ratio pre-processing
+- **Testing Frameworks**: Vitest (Unit Tests), Playwright (End-to-End Browser Automation)
+- **NLP / Grammar Fallback**: Compromise, Nspell, English dictionary data
 
 ---
 
-### 🖼️ High-Definition Un-Squeezed PNG Export
-- **Aspect Ratio Pre-Cropping**: Automatically handles CSS `object-fit: cover` and `contain` during HTML5 Canvas capture, preventing stretched or squashed photos.
-- **Exact Logo Dimensions**: Preserves watermark height and proportions during high-DPI export.
-- **Live Modal Preview**: View the exported PNG before saving, complete with one-click instant download.
-
----
-
-## ⚡ Performance Benchmarks
-
-| Metric | Before Optimization | After Optimization |
-| :--- | :--- | :--- |
-| **Initial JS Load** | `1,158.80 kB` | **`24.83 kB`** (`8.74 kB` gzipped) — **-97.8%** |
-| **External Scripts** | Blocking CDN `<script>` | **0** (fully removed) |
-| **Grammar Engine** | Bundled eagerly | **Lazy-loaded on demand** |
-| **Canvas Export Engine** | Main bundle | **Separated chunk** (loaded on export) |
-| **Color Picker Frame Rate** | Unthrottled mousemove | **60 FPS `requestAnimationFrame`** |
-
----
-
-## 🛠️ Tech Stack
-
-- **Core**: Vanilla TypeScript, HTML5 Canvas, CSS3 Modern Flexbox/Grid
-- **Bundler & Tooling**: [Vite 6](https://vitejs.dev/)
-- **Export Engine**: [html2canvas](https://html2canvas.hertzen.com/) with aspect-fit rendering
-- **Testing**: [Vitest](https://vitest.dev/) (Unit) & [Playwright](https://playwright.dev/) (E2E Browser)
-- **NLP / Spelling**: Compromise, Nspell, English dictionary (lazy-loaded)
-
----
-
-## 🚀 Quick Start
+## Getting Started
 
 ### Prerequisites
-- Node.js (v18+)
-- npm
+- Node.js (v18.0.0 or higher)
+- npm (v9.0.0 or higher)
 
 ### Installation
 ```bash
@@ -100,29 +103,65 @@ cd postcreator
 npm install
 ```
 
-### Development Server
+### Local Development
 ```bash
 npm run dev
 ```
-Open [http://localhost:5173/postcreator/](http://localhost:5173/postcreator/) in your browser.
+Navigate to `http://localhost:5173/postcreator/` in your browser.
 
 ### Production Build
 ```bash
 npm run build
 npm run preview
 ```
+Compiled production assets are output to the `dist/` directory.
 
-### Run Tests
+---
+
+## Automated Verification
+
+The repository maintains full test coverage across business logic, state mutations, and browser rendering:
+
 ```bash
-# Run unit tests with Vitest (38 tests)
+# Execute unit tests via Vitest (38 tests)
 npm test
 
-# Run end-to-end tests with Playwright (15 tests)
+# Execute end-to-end browser test suite via Playwright (15 tests)
 npm run test:e2e
 ```
 
 ---
 
-## 📄 License
+## Project Structure
 
-MIT © [Sujal Achari](https://github.com/Suz41)
+```text
+postcreator/
+├── index.html                 # Core studio UI, toolbar controls, card canvas
+├── package.json               # Dependencies and scripts
+├── vite.config.ts             # Bundler configuration and code-splitting rules
+├── tsconfig.json              # TypeScript strict configuration
+├── public/                    # Static assets (favicons, manifest, vector logos)
+├── src/
+│   ├── main.ts                # Application lifecycle, event listeners, DOM binding
+│   ├── assets/                # Master SVG vector paths and high-DPI PNGs
+│   ├── editor/
+│   │   ├── state.ts           # Central state model, default settings, types
+│   │   └── themes.ts          # Color classification and luminance calculations
+│   ├── export/
+│   │   └── render.ts          # Aspect-preserving html2canvas export pipeline
+│   ├── image/
+│   │   └── upload.ts          # Multi-image processing, scaling, drag & drop
+│   └── services/
+│       ├── grammar.ts         # Lazy-loaded text enhancement and spellcheck
+│       └── enDictData.ts      # Offline dictionary dataset
+└── tests/
+    ├── export.test.ts         # Vitest unit test suite (38 tests)
+    └── e2e/
+        └── postcreator.spec.ts # Playwright browser test suite (15 tests)
+```
+
+---
+
+## License
+
+Distributed under the MIT License. Copyright (c) Sujal Achari.
