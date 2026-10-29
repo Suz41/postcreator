@@ -3,8 +3,20 @@
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Mobile text card editor. Type, style, export as PNG.",
+  "description": "Client-side social card studio for Instagram quote cards, carousels, and Twitter/X multi-image posts with vector branding and un-squeezed PNG export.",
   "homepage": "https://suz41.github.io/postcreator/",
+  "keywords": [
+    "instagram-creator",
+    "twitter-grid",
+    "social-media-graphics",
+    "quote-maker",
+    "card-generator",
+    "carousel-generator",
+    "canvas-export",
+    "client-side",
+    "typescript",
+    "vite"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
